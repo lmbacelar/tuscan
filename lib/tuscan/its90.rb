@@ -30,6 +30,8 @@ module Tuscan
       w = r / rtpw
       Its90.t90r w - wdev(Its90.t90r(w), args)
     end
+    alias_method :t, :t90
+    alias_method :temperature, :t90
 
     # SUBRANGES = 1..11
 
