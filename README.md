@@ -1,4 +1,5 @@
-# **TUSCAn** - **T**emperat**U**re **S**ensor **CA**lculator
+# **TUSCAn**
+### **T**emperat**U**re **S**ensor **CA**lculator
 
 Makes available functions to:
 
