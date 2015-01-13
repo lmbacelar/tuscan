@@ -38,22 +38,29 @@ Or install it yourself as:
 
 ```ruby
 Tuscan.t90(:iec60751, r: 110, r0: 100, a:..., b:..., c:...)
+```
+
+```ruby
 Tuscan.res(:iec60751, t: 10, r0: 100, a:..., b:..., c:...)
+```
 
-Tuscan.t90(:its90, r: 110, 
-                   subrange:..., 
-                   rtpw:..., a:..., b:..., c:..., d:..., w660:..., 
-                   c1:..., c2:..., c3: ..., c4:..., c5:...)
+```ruby
+Tuscan.t90(:its90, r: 110, subrange:..., rtpw:..., a:..., b:..., c:..., d:..., w660:..., c1:..., c2:..., c3: ..., c4:..., c5:...)
+```
 
+```ruby
 Tuscan.t90(:iec60584, emf: 10.3e-6, type: :k)
+```
+
+```ruby
 Tuscan.emf(:iec60584, t: 10, type: :k)
 ```
 
-Method `t90` aliased to `t`, `temperature`
 
-Method `res` aliased to `r`, `resistance`
-
-Method `emf` aliased to `v`, `voltage`
+### Notes
+* `t90` aliased to `t`, `temperature`
+* `res` aliased to `r`, `resistance`
+* `emf` aliased to `v`, `voltage`
 
 
 ## Contributing
@@ -62,4 +69,4 @@ Method `emf` aliased to `v`, `voltage`
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request ) ````
+5. Create a new Pull Request
