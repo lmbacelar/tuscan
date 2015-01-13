@@ -1,12 +1,21 @@
 # **TUSCAn**
 ### **T**emperat**U**re **S**ensor **CA**lculator
 
-Makes available functions to:
+Makes available functions for:
 
-* Get _temperature_ from _resistance_ for IEC 60751 and ITS-90 thermoresistances
-* Get _resistance_ from _temperature_ for IEC 60751 thermoresistances
-* Get _temperature_ from electro-motive force (_emf_) for IEC 60584 thermocouples
-* Get _emf_ from _temperature_ for IEC 60584 thermocouples
+* ITS-90 compatible temperature sensors (Standard Platinum Resistance Thermometers), allowing:
+  * Retrieval of reference resistance ratio _Wr_ from _t90r_ reference temperature
+  * Retrieval of reference temperature _t90r_ from _Wr_ reference resistance ratio
+  * Given sensor coefficient's: _sub-range_, _Rtpw_, _a_, _b_, _c_, _d_, _W660_, _c1_, _c2_, _c3_, _c4_, _c5_
+    * Retrieval of resistance ratio deviation  _Wdev_ from _t90_, for each of the 11 sub-ranges of ITS-90
+    * Retrieval of  _t90_ temperature from sensor's resistance _r_. 
+* IEC 60751 compatible temperature sensors (Platinum Resistance Thermometers), allowing:
+  * Given sensor coefficient's: _R0_, _A_, _B_, _C_
+    * Retrieval of sensor's resistance _r_ from _t90_ temperature
+    * Retrieval of temperature _t90_ from sensor's resistance _r_
+* IEC 60584 compatible temperature sensors (Thermocouples), allowing, for a given _type_:
+  * Retrieval of reference voltage _emfr_ from _t90r_ reference temperature
+  * Retrieval of reference temperature _t90r_ from reference voltage _emfr_
 
 
 ## Installation
@@ -28,21 +37,24 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-Tuscan.t(:iec60751, r: 110, r0: 100, a:..., b:..., c:...)
-Tuscan.r(:iec60751, t: 10, r0: 100, a:..., b:..., c:...)
+Tuscan.t90(:iec60751, r: 110, r0: 100, a:..., b:..., c:...)
+Tuscan.res(:iec60751, t: 10, r0: 100, a:..., b:..., c:...)
 
-Tuscan.t(:its90, r: 110, 
-                 subrange:..., 
-                 rtpw:..., a:..., b:..., c:..., d:..., w660:..., 
-                 c1:..., c2:..., c3: ..., c4:..., c5:...)
+Tuscan.t90(:its90, r: 110, 
+                   subrange:..., 
+                   rtpw:..., a:..., b:..., c:..., d:..., w660:..., 
+                   c1:..., c2:..., c3: ..., c4:..., c5:...)
 
-Tuscan.t(:iec60584, emf: 10.3e-6, type: :k)
+Tuscan.t90(:iec60584, emf: 10.3e-6, type: :k)
 Tuscan.emf(:iec60584, t: 10, type: :k)
 ```
 
-Method `t` aliased to `t90`, `temperature`
+Method `t90` aliased to `t`, `temperature`
 
-Method `r` aliased to `res`, `resistance`
+Method `res` aliased to `r`, `resistance`
+
+Method `emf` aliased to `v`, `voltage`
+
 
 ## Contributing
 
