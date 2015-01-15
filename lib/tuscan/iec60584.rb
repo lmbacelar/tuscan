@@ -10,12 +10,20 @@ module Tuscan
       result += a[0] * exp(a[1] * (t90 - a[2])**2)
     end
 
-    def t90r emf, type, err_limit: 0.1, num_iter: 1000
-      t90_coeffs(emf, type).each_with_index.map{ |d,i| d*emf**i }.reduce(:+)
+    def t90r emf, type, err: 1e-3, num: 100
+      guess = t90r_guess emf, type
+      Rical.inverse_for f: method(:emfr), fargs: type,
+                        x0: guess - 0.5, x1: guess + 0.5,
+                        y: emf, method: :secant,
+                        num: num, err: err * 1e-3
     end
 
 
   private
+    def t90r_guess emf, type
+      t90_coeffs(emf, type).each_with_index.map{ |d,i| d*emf**i }.reduce(:+)
+    end
+
     def emf_c_coeffs t90, type
       case type
       when :b then emf_c_coeffs_b t90
