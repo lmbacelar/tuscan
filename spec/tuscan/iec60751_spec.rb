@@ -22,13 +22,14 @@ module Tuscan
           expect(Iec60751.r 0, r0: 101.0).to be_within(1e-4).of(101)
         end
       end
+
+      it 'raises RangeError when t90 is out of range' do
+        expect{ Iec60751.r -201.0 }.to raise_error RangeError
+        expect{ Iec60751.r  851.0 }.to raise_error RangeError
+      end
     end
 
     context 'temperature computation' do
-      it 'yields complex temperatures as NaN' do
-        expect(Iec60751.t90 1000).to be Float::NAN
-      end
-
       context 'standard coefficients' do
         examples.each do |example|
           it "yields #{example[:t90]} Celius when resistance equals #{example[:r]} Ohm" do
@@ -41,6 +42,11 @@ module Tuscan
         it 'yields 0.0 Celsius when resistance equals 101.0 Ohm on a FUNCTION with r0 = 101.0 Ohm' do
           expect(Iec60751.t90 101, r0: 101.0).to be_within(1e-4).of(0)
         end
+      end
+
+      it 'raises RangeError when r is out of range' do
+        expect{ Iec60751.t90  18.0 }.to raise_error RangeError
+        expect{ Iec60751.t90 391.0 }.to raise_error RangeError
       end
     end
   end
