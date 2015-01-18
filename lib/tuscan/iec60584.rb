@@ -8,6 +8,8 @@ module Tuscan
       emfc = emf - emfdev(t90r(emf, type, err, num), a, b, c, d)
       t90r emfc, type, err, num
     end
+    alias_method :t, :t90
+    alias_method :temperature, :t90
 
     def emfr t90, type
       raise RangeError, 't90 is outside the valid range' if out_of_range? t90, type
