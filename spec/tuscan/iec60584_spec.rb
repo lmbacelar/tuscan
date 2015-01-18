@@ -2,12 +2,14 @@ require 'spec_helper'
 
 #
 # TODO:
-#   1. implement deviation function (polynomial)
-#   2. compute better t90_guess for 50..250 ºC to allow extension of T)=_RANGE donw to 50ºC
+#   1. implement emf(t90, ...) as an inverse of t90(emf, ...)
+#   2. compute better t90_guess for 50..250 ºC to allow extension of T90_RANGE down to 50ºC
 #
 module Tuscan
   describe Iec60584 do
     context 'reference functions' do
+      err = 1e-3
+      num = 10
       examples = {
         b: [
           { emf:  0.006197, t90:  60.0 },
@@ -104,9 +106,23 @@ module Tuscan
           context "on a type #{type.upcase} thermocouple" do
             examples[type].each do |example|
               it "yields #{example[:t90]} ºC when emf equals #{example[:emf]} mV" do
-                expect(Iec60584.t90r(example[:emf], type)).to be_within(1e-3).of(example[:t90])
+                expect(Iec60584.t90r(example[:emf], type, err, num)).to be_within(1e-3).of(example[:t90])
               end
             end
+          end
+        end
+      end
+
+      context 'deviation functions' do
+        context 'emfdev computation' do
+          it 'delegates to Polynomial' do
+            expect(Polynomial).to receive(:new).with(1, 2, 3, 4).and_call_original
+            Iec60584.emfdev 0, 1, 2, 3, 4
+          end
+
+          it 'calls Polynomial#solve_for' do
+            expect_any_instance_of(Polynomial).to receive(:solve_for).with(0)
+            Iec60584.emfdev 0, 1, 2, 3, 4
           end
         end
       end
@@ -123,6 +139,21 @@ module Tuscan
             it "raises RangeError when t90 is #{t90hi} ºC" do
               expect{ Iec60584.emfr t90hi, type }.to raise_error RangeError
             end
+          end
+        end
+      end
+
+      context 't90 function' do
+        tc = { type: :r, a: 0, b: -1.39363e-05, c: 3.75578e-08, d: -2.17624e-11 }
+        examples = [
+          { emf:  3.6105, t90:  419.527 },
+          { emf: 10.0054, t90:  961.78  },
+          { emf: 11.6417, t90: 1084.62  }
+        ]
+
+        examples.each do |example|
+          it "complies with NPL cert. 2014040275/1/PM03, #{example[:emf]} mV => #{example[:t90]} ºC" do
+            expect(Iec60584.t90 example[:emf], tc).to be_within(0.01).of(example[:t90])
           end
         end
       end
