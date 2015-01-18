@@ -28,7 +28,7 @@ module Tuscan
 
     def t90 r, rtpw:, **args
       w = r / rtpw
-      Its90.t90r w - wdev(Its90.t90r(w), args)
+      t90r w - wdev(t90r(w), args)
     end
     alias_method :t, :t90
     alias_method :temperature, :t90
@@ -87,7 +87,7 @@ module Tuscan
                   c1: 0.0, c2: 0.0, c3: 0.0, c4: 0.0, c5: 0.0
       equation = WDEV_EQUATIONS[subrange - 1]
       # return nil unless equation[:valid].include? t90
-      wr_t90 = Its90.wr t90
+      wr_t90 = wr t90
       case subrange
       when 1..4
         wdev  = a * (wr_t90 - 1)
