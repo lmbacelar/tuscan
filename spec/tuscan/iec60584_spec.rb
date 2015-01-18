@@ -3,14 +3,14 @@ require 'spec_helper'
 #
 # TODO:
 #   1. implement deviation function (polynomial)
-#   2. check B, 0 mV t90 computation (error in inverse coeffs?)
+#   2. compute better t90_guess for 50..250 ºC to allow extension of T)=_RANGE donw to 50ºC
 #
 module Tuscan
   describe Iec60584 do
     context 'reference functions' do
       examples = {
         b: [
-          # { emf:  0.000000, t90:   0.0 },
+          { emf:  0.006197, t90:  60.0 },
           { emf:  0.291279, t90: 250.0 },
           { emf:  1.974546, t90: 630.0 },
           { emf:  1.980771, t90: 631.0 },
@@ -106,6 +106,22 @@ module Tuscan
               it "yields #{example[:t90]} ºC when emf equals #{example[:emf]} mV" do
                 expect(Iec60584.t90r(example[:emf], type)).to be_within(1e-3).of(example[:t90])
               end
+            end
+          end
+        end
+      end
+
+      context 'range validation' do
+        %i{ b c e j k n r s t }.each do |type|
+          context "on a type #{type.upcase} thermocouple" do
+            t90lo = examples[type].first[:t90] - 1.0
+            it "raises RangeError when t90 is #{t90lo} ºC" do
+              expect{ Iec60584.emfr t90lo, type }.to raise_error RangeError
+            end
+
+            t90hi = examples[type].last[:t90] + 1.0
+            it "raises RangeError when t90 is #{t90hi} ºC" do
+              expect{ Iec60584.emfr t90hi, type }.to raise_error RangeError
             end
           end
         end
