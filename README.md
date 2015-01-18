@@ -55,7 +55,7 @@ Tuscan.res(:iec60751, t: 10, r0: 99.876, a:3.9083e-03, b:-5.7750e-07, c:-4.1830e
 **IEC 60584**
 ```ruby
 Tuscan.t90r(:iec60584, emf: 1.234, type: :k)  # emf im mV
-Tuscan.emfir(:iec60584, t: 10.123, type: :k)  # t90 in ºC
+Tuscan.emfr(:iec60584, t: 10.123, type: :k)  # t90 in ºC
 ```
 
 
