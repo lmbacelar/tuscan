@@ -3,7 +3,7 @@ require 'spec_helper'
 #
 # TODO:
 #   1. implement deviation function (polynomial)
-#   2. check B, 0 mV t90 computation (errorin inverse coeffs?)
+#   2. check B, 0 mV t90 computation (error in inverse coeffs?)
 #
 module Tuscan
   describe Iec60584 do
