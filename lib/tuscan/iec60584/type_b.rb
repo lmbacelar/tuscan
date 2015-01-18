@@ -1,11 +1,11 @@
 module Tuscan
   module Iec60584
     module TypeB
-      T90_RANGE = 0.000..1820.00
+      T90_RANGE = 60.0..1820.00
       EMF_RANGE = 0.290..13.821
       extend self
 
-      def emfr t90, range_check = true
+      def emfr_unbound t90
         if t90 < 630.615
           Polynomial.new(
             0.000000000000e+00, -0.246508183460e-03,  0.590404211710e-05, -0.132579316360e-08, 

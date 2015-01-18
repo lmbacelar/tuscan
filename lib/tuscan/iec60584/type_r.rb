@@ -6,7 +6,7 @@ module Tuscan
 
       extend self
 
-      def emfr t90, range_check = true
+      def emfr_unbound t90
         if t90 < 1064.18
           Polynomial.new(
              0.000000000000e+00,  0.528961729765e-02,  0.139166589782e-04, -0.238855693017e-07,
