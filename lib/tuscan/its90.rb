@@ -93,7 +93,7 @@ module Tuscan
           wdev += b * (wr_t90 - 1) * log(wr_t90) :
           wdev += b * (wr_t90 - 1)**2
         wdev += equation[:k].each_with_index.
-                  collect{ |k, i| eval("#{k}") * log(wr_t90)**(i + equation[:n]) }.reduce(:+) || 0
+                  collect{ |k, i| call(k) * log(wr_t90)**(i + equation[:n]) }.reduce(:+) || 0
       when 5..11
         wdev   = d * (wr_t90 - w660)**2 if equation[:k].delete('d')
         wdev ||= 0
