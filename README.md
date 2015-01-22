@@ -4,18 +4,22 @@
 Makes available functions for:
 
 * ITS-90 compatible temperature sensors (Standard Platinum Resistance Thermometers), allowing:
-  * Retrieval of reference resistance ratio _Wr_ from _t90r_ reference temperature
-  * Retrieval of reference temperature _t90r_ from _Wr_ reference resistance ratio
-  * Given sensor coefficient's: _sub-range_, _Rtpw_, _a_, _b_, _c_, _d_, _W660_, _c1_, _c2_, _c3_, _c4_, _c5_
-    * Retrieval of resistance ratio deviation  _Wdev_ from _t90_, for each of the 11 sub-ranges of ITS-90
-    * Retrieval of  _t90_ temperature from sensor's resistance _r_. 
+  * Retrieval of reference resistance ratio _W<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
+  * Retrieval of reference temperature _t<sub>90R</sub>_ from _W<sub>R</sub>_ reference resistance ratio
+  * Given sensor coefficient's: _sub-range_, _R<sub>tpw</sub>_, _a_, _b_, _c_, _d_, _W<sub>660</sub>_, _c<sub>1</sub>_, _c<sub>2</sub>_, _c<sub>3</sub>_, _c<sub>4</sub>_, _c<sub>5</sub>_
+    * Retrieval of  _t<sub>90</sub>_ temperature from sensor's resistance _r_. 
 * IEC 60751 compatible temperature sensors (Platinum Resistance Thermometers), allowing:
-  * Given sensor coefficient's: _R0_, _A_, _B_, _C_
-    * Retrieval of sensor's resistance _r_ from _t90_ temperature
-    * Retrieval of temperature _t90_ from sensor's resistance _r_
+  * Retrieval of reference resistance _r<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
+  * Retrieval of reference temperature _t<sub>90R</sub>_ from _r<sub>R</sub>_ reference resistance
+  * Given sensor coefficient's: _R<sub>0</sub>_, _A_, _B_, _C_
+    * Retrieval of sensor's resistance _r_ from _t<sub>90</sub>_ temperature
+    * Retrieval of temperature _t<sub>90</sub>_ from sensor's resistance _r_
 * IEC 60584 compatible temperature sensors (Thermocouples), allowing, for a given _type_:
-  * Retrieval of reference voltage _emfr_ from _t90r_ reference temperature
-  * Retrieval of reference temperature _t90r_ from reference voltage _emfr_
+  * Retrieval of reference voltage _emf<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
+  * Retrieval of reference temperature _t<sub>90R</sub>_ from reference voltage _emf<sub>R</sub>_
+  * Given sensor coefficient's: _a_, _b_, _c_, _d_
+    * Retrieval of sensor's voltage _emf_ from _t<sub>90</sub>_ temperature
+    * Retrieval of temperature _t<sub>90</sub>_ from sensor's voltage _emf_
 
 
 ## Installation
