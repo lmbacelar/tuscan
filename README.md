@@ -38,24 +38,34 @@ Or install it yourself as:
 
 **ITS-90**
 ```ruby
-Tuscan.wr(:its90, 23.456)  # t90 in ºC
-Tuscan.t90r(:its90, 1.15)  # wr in Ohm / Ohm
+# Reference functions (ºC vs Ohm/Ohm)
+Tuscan.wr(:its90, 23.456)
+Tuscan.t90r(:its90, 1.15)
 
-Tuscan.wdev(:its90, 23.456, subrange: 4, a: -1.2579994e-04, b: 1.0678395e-05)
-
+# Corrected for specific sensor (ºC vs Ohm)
 Tuscan.t90(:its90, r: 28.3433, rtpw: 25.319871, subrange: 7, a: -1.2134e-04, b: -9.9190e-06)
 ```
 
 **IEC 60751**
 ```ruby
-Tuscan.t90(:iec60751, r: 110)  # t90 in ºC, r in Ohm
-Tuscan.res(:iec60751, t: 10, r0: 99.876, a:3.9083e-03, b:-5.7750e-07, c:-4.1830e-12)
+# Reference functions (ºC vs Ohm)
+Tuscan.t90r(:iec60751, 110)
+Tuscan.resr(:iec60751, 10)
+
+# Corrected for specific sensor
+Tuscan.t90(:iec60751, 110, r0: 99.876, a:3.9083e-03, b:-5.7750e-07, c:-4.1830e-12)
+Tuscan.res(:iec60751, 10,  r0: 99.876, a:3.9083e-03, b:-5.7750e-07, c:-4.1830e-12)
 ```
 
 **IEC 60584**
 ```ruby
-Tuscan.t90r(:iec60584, emf: 1.234, type: :k)  # emf im mV
-Tuscan.emfr(:iec60584, t: 10.123, type: :k)  # t90 in ºC
+# Reference functions (ºC vs mV)
+Tuscan.t90r(:iec60584, 1.234,  type: :k)
+Tuscan.emfr(:iec60584, 10.123, type: :k)
+
+# Corrected for specific sensor
+Tuscan.t90(:iec60584, 3.6105,  type: :k, a: 0, b: -1.39363e-05, c: 3.75578e-08, d: -2.17624e-11)
+Tuscan.emf(:iec60584, 419.527, type: :k, a: 0, b: -1.39363e-05, c: 3.75578e-08, d: -2.17624e-11)
 ```
 
 
