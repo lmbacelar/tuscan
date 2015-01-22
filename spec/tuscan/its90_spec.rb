@@ -24,6 +24,18 @@ module Tuscan
             expect(Its90.wr example[:t90]).to be_within(1e-8).of(example[:wr])
           end
         end
+
+        context 'range validation' do
+          t90lo = -274.0
+          it "raises RangeError when t90r is #{t90lo} ºC" do
+            expect{ Its90.wr t90lo }.to raise_error RangeError
+          end
+
+          t90hi = 962.0
+          it "raises RangeError when t90r is #{t90hi} ºC" do
+            expect{ Its90.wr t90hi }.to raise_error RangeError
+          end
+        end
       end
 
       context 't90r computation' do
@@ -32,7 +44,21 @@ module Tuscan
             expect(Its90.t90r example[:wr]).to be_within(0.00013).of(example[:t90])
           end
         end
+
+        context 'range validation' do
+          wrlo = -0.1
+          it "raises RangeError when wr is #{wrlo}" do
+            expect{ Its90.t90r wrlo }.to raise_error RangeError
+          end
+
+          wrhi = 4.3
+          it "raises RangeError when wr is #{wrhi}" do
+            expect{ Its90.t90r wrhi }.to raise_error RangeError
+          end
+        end
       end
+
+
     end
 
     context 'deviation functions' do
@@ -52,6 +78,7 @@ module Tuscan
               expect(Its90.wdev example[:t90], sprt).to be_within(1e-8).of(example[:wdev])
             end
           end
+
         end
 
         context 'range 6' do
@@ -67,6 +94,28 @@ module Tuscan
           examples.each do |example|
             it "complies with NIST SP250-81 example on range 6, #{example[:t90]} Celsius" do
               expect(Its90.wdev example[:t90], sprt).to be_within(1e-8).of(example[:wdev])
+            end
+          end
+        end
+
+        context 'range validation' do
+          examples =
+            [ -259.4467..0.01,    -248.5939..0.01,   -218.7916..0.01,
+              -189.3442..0.01,          0.0..961.78,       0.0..660.323 ,
+                    0.0..419.527 ,      0.0..231.928 ,     0.0..156.5985,
+                    0.0..29.7646 , -38.8344..29.7646 ]
+
+          (1..11).each do |subrange|
+            context "on a sub-range #{subrange} SPRT" do
+              t90lo = examples[subrange-1].min - 1.0
+              it "raises RangeError when t90 is #{t90lo} ºC" do
+                expect{ Its90.wdev t90lo, subrange: subrange }.to raise_error RangeError
+              end
+
+              t90hi = examples[subrange-1].max + 1.0
+              it "raises RangeError when t90 is #{t90hi} ºC" do
+                expect{ Its90.wdev t90hi, subrange: subrange }.to raise_error RangeError
+              end
             end
           end
         end
