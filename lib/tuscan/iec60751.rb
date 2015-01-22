@@ -12,6 +12,14 @@ module Tuscan
 
     extend self
 
+    def resr t90
+      r t90
+    end
+
+    def t90r r
+      t90 r
+    end
+
     def r t90, r0: R0, a: A, b: B, c: C
       raise RangeError, 't90 is outside the valid range' unless T90_RANGE.include? t90
       r_unbound t90, r0, a, b, c
