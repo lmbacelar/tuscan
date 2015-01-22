@@ -3,6 +3,9 @@ module Tuscan
     include Math
     extend self
 
+    T90_RANGE = -273.16..961.78
+    WR_RANGE  =    0.00..4.28642053
+
     def t90 r, rtpw:, **args
       w = r / rtpw
       t90r w - wdev(t90r(w), args)
@@ -10,36 +13,8 @@ module Tuscan
     alias_method :t, :t90
     alias_method :temperature, :t90
 
-    # SUBRANGES = 1..11
-
-    # T90_RANGE  = -259.4467..961.88
-    # WR_RANGE   =  0.00119007..4.28642053
-
-    #
-    # VALID TEMPERATURE RANGES
-    #
-    # def range
-    #   WDEV_EQUATIONS[subrange - 1][:valid]
-    # end
-
-    def out_of_range? t90, subrange
-      case subrange
-      when  1 then !(-259.4467..0.01    ).include? t90
-      when  2 then !(-248.5939..0.01    ).include? t90
-      when  3 then !(-218.7916..0.01    ).include? t90
-      when  4 then !(-189.3442..0.01    ).include? t90
-      when  5 then !(      0.0..961.78  ).include? t90
-      when  6 then !(      0.0..660.323 ).include? t90
-      when  7 then !(      0.0..419.527 ).include? t90
-      when  8 then !(      0.0..231.928 ).include? t90
-      when  9 then !(      0.0..156.5985).include? t90
-      when 10 then !(      0.0..29.7646 ).include? t90
-      when 11 then !( -38.8344..29.7646 ).include? t90
-      end
-    end
-
     def self.wr t90
-      # return nil unless T90_RANGE.include? t90
+      raise RangeError, 't90 is outside the valid range' unless T90_RANGE.include? t90
       if t90< 0.01
         a = [ -2.13534729,  3.1832472,  -1.80143597, 0.71727204,  0.50344027, -0.61899395, -0.05332322,
                0.28021362,  0.10715224, -0.29302865, 0.04459872,  0.11868632, -0.05248134 ]
@@ -52,7 +27,7 @@ module Tuscan
     end
 
     def self.t90r wr
-      # return nil unless WR_RANGE.include? wr
+      raise RangeError, 'wr is outside the valid range' unless WR_RANGE.include? wr
       if wr < 1.0
         b = [  0.183324722,  0.240975303,  0.209108771,  0.190439972,  0.142648498,  0.077993465,
                0.012475611, -0.032267127, -0.075291522, -0.05647067,   0.076201285,  0.123893204,
@@ -65,26 +40,11 @@ module Tuscan
       end
     end
 
-    #
-    # ITS-90 DEVIATION FUNCTIONS
-    #
-    WDEV_EQUATIONS = [ { k: %w(c1 c2 c3 c4 c5), n: 2 },
-                       { k: %w(c1 c2 c3      ), n: 0 },
-                       { k: %w(c1            ), n: 1 },
-                       { k: %w(              )       },
-                       { k: %w(a  b  c  d    )       },
-                       { k: %w(a  b  c       )       },
-                       { k: %w(a  b          )       },
-                       { k: %w(a  b          )       },
-                       { k: %w(a             )       },
-                       { k: %w(a             )       },
-                       { k: %w(a  b          )       } ]
-
     def wdev t90, subrange: ,
                   a: 0.0, b: 0.0, c: 0.0, d: 0.0, w660: 0.0,
                   c1: 0.0, c2: 0.0, c3: 0.0, c4: 0.0, c5: 0.0
-      equation = WDEV_EQUATIONS[subrange - 1]
-      # return nil unless equation[:valid].include? t90
+      raise RangeError, 't90 is outside the valid range' if out_of_range? t90, subrange
+      equation = wdev_equation subrange
       wr_t90 = wr t90
       case subrange
       when 1..4
@@ -99,6 +59,39 @@ module Tuscan
         wdev ||= 0
         wdev  += equation[:k].each_with_index.
                     collect{ |k, i| eval("#{k}") * (wr_t90 - 1)**(i+1) }.reduce(:+)
+      end
+    end
+
+  private
+    def wdev_equation subrange
+      case subrange
+      when  1 then { k: %w(c1 c2 c3 c4 c5), n: 2 }
+      when  2 then { k: %w(c1 c2 c3      ), n: 0 }
+      when  3 then { k: %w(c1            ), n: 1 }
+      when  4 then { k: %w(              )       }
+      when  5 then { k: %w(a  b  c  d    )       }
+      when  6 then { k: %w(a  b  c       )       }
+      when  7 then { k: %w(a  b          )       }
+      when  8 then { k: %w(a  b          )       }
+      when  9 then { k: %w(a             )       }
+      when 10 then { k: %w(a             )       }
+      when 11 then { k: %w(a  b          )       }
+      end
+    end
+
+    def out_of_range? t90, subrange
+      case subrange
+      when   1 then !(-259.4467..0.01    ).include? t90
+      when   2 then !(-248.5939..0.01    ).include? t90
+      when   3 then !(-218.7916..0.01    ).include? t90
+      when   4 then !(-189.3442..0.01    ).include? t90
+      when   5 then !(      0.0..961.78  ).include? t90
+      when   6 then !(      0.0..660.323 ).include? t90
+      when   7 then !(      0.0..419.527 ).include? t90
+      when   8 then !(      0.0..231.928 ).include? t90
+      when   9 then !(      0.0..156.5985).include? t90
+      when  10 then !(      0.0..29.7646 ).include? t90
+      when  11 then !( -38.8344..29.7646 ).include? t90
       end
     end
   end
