@@ -13,7 +13,17 @@ module Tuscan
     alias_method :t, :t90
     alias_method :temperature, :t90
 
-    def self.wr t90
+    def r t90, rtpw:, num: 100, err: 1e-6, **args
+      guess = wr t90
+      delta = 1e-2
+      Rical.inverse_for f: method(:t90_unbound), fargs: { rtpw: rtpw, **args },
+                        x0: guess - delta, x1: guess + delta,
+                        y: t90, method: :secant, num: num, err: err * 1e-1
+    end
+    alias_method :res, :r
+    alias_method :resistance, :r
+
+    def wr t90
       raise RangeError, 't90 is outside the valid range' unless T90_RANGE.include? t90
       if t90< 0.01
         a = [ -2.13534729,  3.1832472,  -1.80143597, 0.71727204,  0.50344027, -0.61899395, -0.05332322,
@@ -26,7 +36,7 @@ module Tuscan
       end
     end
 
-    def self.t90r wr
+    def t90r wr
       raise RangeError, 'wr is outside the valid range' unless WR_RANGE.include? wr
       if wr < 1.0
         b = [  0.183324722,  0.240975303,  0.209108771,  0.190439972,  0.142648498,  0.077993465,
@@ -44,6 +54,18 @@ module Tuscan
                   a: 0.0, b: 0.0, c: 0.0, d: 0.0, w660: 0.0,
                   c1: 0.0, c2: 0.0, c3: 0.0, c4: 0.0, c5: 0.0
       raise RangeError, 't90 is outside the valid range' if out_of_range? t90, subrange
+      wdev_unbound t90, subrange: subrange, a: a, b: b, c: c, d: d, w660: w660, c1: c1, c2: c2, c3: c3, c4: c4, c5: c5
+    end
+
+  private
+    def t90_unbound r, rtpw:, **args
+      w = r / rtpw
+      t90r w - wdev_unbound(t90r(w), args)
+    end
+
+    def wdev_unbound t90, subrange: ,
+                  a: 0.0, b: 0.0, c: 0.0, d: 0.0, w660: 0.0,
+                  c1: 0.0, c2: 0.0, c3: 0.0, c4: 0.0, c5: 0.0
       equation = wdev_equation subrange
       wr_t90 = wr t90
       case subrange
@@ -62,7 +84,6 @@ module Tuscan
       end
     end
 
-  private
     def wdev_equation subrange
       case subrange
       when  1 then { k: %w(c1 c2 c3 c4 c5), n: 2 }
