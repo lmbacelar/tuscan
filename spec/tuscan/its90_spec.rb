@@ -122,7 +122,7 @@ module Tuscan
       end
     end
 
-    context 't90 function' do
+    context 'non-standard coefficients' do
       sprt = { rtpw: 25.319871, subrange: 7, a: -1.2134e-04, b: -9.9190e-06 }
       examples = [
         { r: 25.319871, t90:   0.010 },
@@ -130,9 +130,19 @@ module Tuscan
         { r: 65.039218, t90: 419.527 }
       ]
 
-      examples.each do |example|
-        it "complies with IPQ cert. 501.20/1241312 range 7, #{example[:t90]} Celsius" do
-          expect(Its90.t90 example[:r], sprt).to be_within(0.0001).of(example[:t90])
+      context 't90 function' do
+        examples.each do |example|
+          it "complies with IPQ cert. 501.20/1241312 range 7, #{example[:t90]} Celsius" do
+            expect(Its90.t90 example[:r], sprt).to be_within(0.0001).of(example[:t90])
+          end
+        end
+      end
+
+      context 'res function' do
+        examples.each do |example|
+          it "complies with IPQ cert. 501.20/1241312 range 7, #{example[:r]} Ohm" do
+            expect(Its90.res example[:t90], sprt).to be_within(1e-5).of(example[:r])
+          end
         end
       end
     end
