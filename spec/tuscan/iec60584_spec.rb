@@ -7,8 +7,6 @@ require 'spec_helper'
 module Tuscan
   describe Iec60584 do
     context 'reference functions' do
-      err = 1e-3
-      num = 10
       examples = {
         b: [
           { emf:  0.006197, t90:  60.0 },
@@ -93,7 +91,7 @@ module Tuscan
           context "on a type #{type.upcase} thermocouple" do
             examples[type].each do |example|
               it "yields #{example[:emf]} mV when t90 equals #{example[:t90]} ºC" do
-                expect(Iec60584.emfr(example[:t90], type)).to be_within(1e-6).of(example[:emf])
+                expect(Iec60584.emfr example[:t90], type: type).to be_within(1e-6).of(example[:emf])
               end
             end
           end
@@ -105,7 +103,7 @@ module Tuscan
           context "on a type #{type.upcase} thermocouple" do
             examples[type].each do |example|
               it "yields #{example[:t90]} ºC when emf equals #{example[:emf]} mV" do
-                expect(Iec60584.t90r(example[:emf], type, err, num)).to be_within(1e-3).of(example[:t90])
+                expect(Iec60584.t90r example[:emf], type: type).to be_within(1e-3).of(example[:t90])
               end
             end
           end
@@ -117,12 +115,12 @@ module Tuscan
           context "on a type #{type.upcase} thermocouple" do
             t90lo = examples[type].first[:t90] - 1.0
             it "raises RangeError when t90 is #{t90lo} ºC" do
-              expect{ Iec60584.emfr t90lo, type }.to raise_error RangeError
+              expect{ Iec60584.emfr t90lo, type: type }.to raise_error RangeError
             end
 
             t90hi = examples[type].last[:t90] + 1.0
             it "raises RangeError when t90 is #{t90hi} ºC" do
-              expect{ Iec60584.emfr t90hi, type }.to raise_error RangeError
+              expect{ Iec60584.emfr t90hi, type: type }.to raise_error RangeError
             end
           end
         end
