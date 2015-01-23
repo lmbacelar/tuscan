@@ -7,13 +7,14 @@ Makes available functions for:
   * Retrieval of reference resistance ratio _W<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
   * Retrieval of reference temperature _t<sub>90R</sub>_ from _W<sub>R</sub>_ reference resistance ratio
   * Given sensor coefficient's: _sub-range_, _R<sub>tpw</sub>_, _a_, _b_, _c_, _d_, _W<sub>660</sub>_, _c<sub>1</sub>_, _c<sub>2</sub>_, _c<sub>3</sub>_, _c<sub>4</sub>_, _c<sub>5</sub>_
-    * Retrieval of  _t<sub>90</sub>_ temperature from sensor's resistance _r_. 
+    * Retrieval of  _t<sub>90</sub>_ temperature from sensor's resistance _res_ 
+    * Retrieval of  _res_ resistance from sensor's _t<sub>90</sub>_ temperature. 
 * IEC 60751 compatible temperature sensors (Platinum Resistance Thermometers), allowing:
-  * Retrieval of reference resistance _r<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
-  * Retrieval of reference temperature _t<sub>90R</sub>_ from _r<sub>R</sub>_ reference resistance
+  * Retrieval of reference resistance _res<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
+  * Retrieval of reference temperature _t<sub>90R</sub>_ from _res<sub>R</sub>_ reference resistance
   * Given sensor coefficient's: _R<sub>0</sub>_, _A_, _B_, _C_
-    * Retrieval of sensor's resistance _r_ from _t<sub>90</sub>_ temperature
-    * Retrieval of temperature _t<sub>90</sub>_ from sensor's resistance _r_
+    * Retrieval of sensor's resistance _res_ from _t<sub>90</sub>_ temperature
+    * Retrieval of temperature _t<sub>90</sub>_ from sensor's resistance _res_
 * IEC 60584 compatible temperature sensors (Thermocouples), allowing, for a given _type_:
   * Retrieval of reference voltage _emf<sub>R</sub>_ from _t<sub>90R</sub>_ reference temperature
   * Retrieval of reference temperature _t<sub>90R</sub>_ from reference voltage _emf<sub>R</sub>_
@@ -47,7 +48,8 @@ Tuscan.wr(:its90, 23.456)
 Tuscan.t90r(:its90, 1.15)
 
 # Corrected for specific sensor (ºC vs Ohm)
-Tuscan.t90(:its90, r: 28.3433, rtpw: 25.319871, subrange: 7, a: -1.2134e-04, b: -9.9190e-06)
+Tuscan.t90(:its90, 25.319871, rtpw: 25.319871, subrange: 7, a: -1.2134e-04, b: -9.9190e-06)
+Tuscan.res(:its90, 0.01,      rtpw: 25.319871, subrange: 7, a: -1.2134e-04, b: -9.9190e-06)
 ```
 
 **IEC 60751**
